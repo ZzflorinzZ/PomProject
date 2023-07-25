@@ -49,10 +49,9 @@ public class SeleniumWrappers extends BaseTest {
 	 * Wrapped method over Selenium default click() method, enhanced with:</br>
 	 * 1. Logging mechanism</br>
 	 * 2. waitForElementToBeClickable() method, before any action to be performed on webElement</br>
-	 * 3. returnElement() method, for using a WebElement
-	 * 4. catch NoSuchElementException</br>
-	 * 5. catch StaleElementReferenceException</br>
-	 * 6. Retry mechanism</br>
+	 * 3. catch NoSuchElementException</br>
+	 * 4. catch StaleElementReferenceException</br>
+	 * 5. Retry mechanism</br>
 	 * 
 	 * @param locator (By locator)
 	 */
@@ -71,6 +70,9 @@ public class SeleniumWrappers extends BaseTest {
 			returnElement(locator).click();
 		}
 	}
+
+//exceptii: element not interactible
+//general exception	
 	
 	/**
 	 * Wrapped method over Selenium Actions default doubleClick() method, enhanced with:</br>

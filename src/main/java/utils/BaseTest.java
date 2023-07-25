@@ -58,7 +58,7 @@ public class BaseTest extends Driver{
 			TakesScreenshot poza = (TakesScreenshot)driver;
 			File picture = poza.getScreenshotAs(OutputType.FILE);
 			//salvam poza
-			Files.copy(picture, new File("poze/failure.png"));
+			Files.copy(picture, new File("Failure_Screenshoots/failure.png"));
 		}
 
 	}
