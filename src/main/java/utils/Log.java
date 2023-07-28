@@ -11,6 +11,10 @@ public class Log {
 		Log.info(message);
 	}
 	
+	public static void warn(String message) {
+		Log.warn(message);
+	}
+	
 	public static void error(String message) {
 		Log.error(message);
 	}

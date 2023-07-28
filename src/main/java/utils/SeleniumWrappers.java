@@ -17,7 +17,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.TestException;
 
 
-
 public class SeleniumWrappers extends BaseTest {
 	
 	public SeleniumWrappers(WebDriver driver) {
@@ -29,6 +28,9 @@ public class SeleniumWrappers extends BaseTest {
 	 * Wrapped method over Selenium default driver.findElement() functionality, enhanced with:</br>
 	 * 1. Logging mechanism</br>
 	 * 2. catch NoSuchElementException</br>
+	 * 3. catch StaleElementReferenceException</br>
+	 * 4. waitForElementToBePresent() method</br>
+	 * 4. Retry mechanism</br>
 	 * 
 	 * @param locator (By locator)
 	 * @return WebElement
@@ -41,17 +43,21 @@ public class SeleniumWrappers extends BaseTest {
 			Log.error("Element not found in method <returnElement()>");
 			Log.error(e.getMessage());
 			return null;
-		}
-	}
+		}catch (StaleElementReferenceException e) {
+			Log.error("Catch StaleElementReferenceException in method <returnElement()> on: " + locator.toString());
+			Log.error(e.getMessage());
+//			waitForElementToBePresent(locator);
+			driver.findElement(locator);
+		}return driver.findElement(locator);
+	}	
 
 //CLICK METHODS	
 	/**
 	 * Wrapped method over Selenium default click() method, enhanced with:</br>
 	 * 1. Logging mechanism</br>
 	 * 2. waitForElementToBeClickable() method, before any action to be performed on webElement</br>
-	 * 3. catch NoSuchElementException</br>
-	 * 4. catch StaleElementReferenceException</br>
-	 * 5. Retry mechanism</br>
+	 * 3. returnElement() method</br>
+	 * 4. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 */
@@ -60,14 +66,36 @@ public class SeleniumWrappers extends BaseTest {
 		try {
 			waitForElementToBeClickable(locator);
 			returnElement(locator).click();
-		} catch (NoSuchElementException e) {
-			Log.error("Element not found in method <click()>");
-			Log.error(e.getMessage());
-			throw new TestException("Element not found in method <click()>");
 		} catch (StaleElementReferenceException e) {
-			Log.error("Catch StaleElementReferenceException in method <click> on: " + locator.toString());
-			returnElement(locator);
+			Log.warn("Catch StaleElementReferenceException in method <click()> on: " + locator.toString());
+			Log.warn(e.getMessage());
+//			waitForElementToBePresent(locator);
 			returnElement(locator).click();
+		}catch (Exception e) {
+			Log.error("Exception error in method <click()>");
+			Log.error(e.getMessage());
+			throw new TestException("Exception error in method <click()>");
+		}
+	}
+	
+	/**
+	 * Wrapped method over Selenium default click() method, enhanced with:</br>
+	 * 1. Logging mechanism</br>
+	 * 2. waitForElementToBePresent() method, before any action to be performed on webElement</br>
+	 * 3. returnElement() method</br>
+	 * 4. catch General exception</br>
+	 * 
+	 * @param locator (By locator)
+	 */
+	public void clickOnElementPresent(By locator) {
+		Log.info("Called method <click> on element" + locator.toString());
+		try {
+			waitForElementToBePresent(locator);
+			returnElement(locator).click();
+		} catch (Exception e) {
+			Log.error("Exception error in method <click()>");
+			Log.error(e.getMessage());
+			throw new TestException("Exception error in method <click()>");
 		}
 	}
 
@@ -78,28 +106,21 @@ public class SeleniumWrappers extends BaseTest {
 	 * Wrapped method over Selenium Actions default doubleClick() method, enhanced with:</br>
 	 * 1. Logging mechanism</br>
 	 * 2. waitForElementToBeClickable() method, before any action to be performed on webElement</br>
-	 * 3. returnElement() method, for using a WebElement
-	 * 4. catch NoSuchElementException</br>
-	 * 5. catch StaleElementReferenceException</br>
-	 * 6. Retry mechanism</br>
+	 * 3. returnElement() method</br>
+	 * 4. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 */
 	public void doubleClick(By locator) {
-		Log.info("Called method <doubleClick> on element" + locator.toString());
+		Log.info("Called method <doubleClick()> on element" + locator.toString());
 		try {
 			waitForElementToBeClickable(locator);
 			Actions action = new Actions(driver);
 			action.doubleClick(returnElement(locator)).perform();			
-		} catch (NoSuchElementException e) {
-			Log.error("Element not found in method <doubleClick()>");
+		} catch (Exception e) {
+			Log.error("Exception error in method <doubleClick()>");
 			Log.error(e.getMessage());
-			throw new TestException("Element not found in method <doubleClick()>");
-		} catch (StaleElementReferenceException e) {
-			Log.error("Catch StaleElementReferenceException in method <doubleClick> on: " + locator.toString());
-			returnElement(locator);
-			Actions action = new Actions(driver);
-			action.doubleClick(returnElement(locator)).perform();	
+			throw new TestException("Exception error in method <doubleClick()>");
 		}
 	}
 	
@@ -190,9 +211,9 @@ public class SeleniumWrappers extends BaseTest {
 	 * Wrapped method over Selenium default sendKeys() method, enhanced with:</br>
 	 * 1. Logging mechanism</br>
 	 * 2. waitForElementToBeVisible() method, before any action to be performed on webElement</br>
-	 * 3. returnElement() method, for using a WebElement
+	 * 3. returnElement() method</br>
 	 * 4. Clear() method before sending text</br>
-	 * 5. catch NoSuchElementException</br>
+	 * 5. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 * @param textToSend (String value)
@@ -203,10 +224,10 @@ public class SeleniumWrappers extends BaseTest {
 			waitForElementToBeVisible(locator);
 			returnElement(locator).clear();
 			returnElement(locator).sendKeys(textToSend);
-		} catch (NoSuchElementException e) {
-			Log.error("Element not found in method <sendKeys()>");
+		} catch (Exception e) {
+			Log.error("Exception error in method <sendKeys()>");
 			Log.error(e.getMessage());
-			throw new TestException("Element not found in method <sendKeys()>");
+			throw new TestException("Exception error in method <sendKeys()>");
 		}
 	}
 
@@ -214,8 +235,8 @@ public class SeleniumWrappers extends BaseTest {
 	/**
 	 * Wrapped method over Selenium default isDisplayed() method, enhanced with:</br>
 	 * 1. Logging mechanism</br>
-	 * 2. returnElement() method, for using a WebElement
-	 * 3. catch NoSuchElementException</br>
+	 * 2. returnElement() method</br>
+	 * 3. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 * @return boolean
@@ -225,8 +246,8 @@ public class SeleniumWrappers extends BaseTest {
 		try {
 			returnElement(locator).isDisplayed();
 			return true;
-		} catch (NoSuchElementException e) {
-			Log.error("Element not found in method <checkElementIsDisplayed()>");
+		} catch (Exception e) {
+			Log.error("Exception error in method <checkElementIsDisplayed()>");
 			Log.error(e.getMessage());
 			return false;					
 		}
@@ -237,8 +258,8 @@ public class SeleniumWrappers extends BaseTest {
 	 * Wrapped method over Selenium Actions default moveToElement() method, enhanced with:</br>
 	 * 1. Logging mechanism</br>
 	 * 2. waitForElementToBeVisible() method, before any action to be performed on webElement</br>
-	 * 3. returnElement() method, for using a WebElement
-	 * 4. catch NoSuchElementException</br>
+	 * 3. returnElement() method</br>
+	 * 4. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 */
@@ -248,10 +269,10 @@ public class SeleniumWrappers extends BaseTest {
 		try {
 			waitForElementToBeVisible(locator);
 			hoover.moveToElement(returnElement(locator)).perform();
-		} catch (NoSuchElementException e) {
-			Log.error("Element not found in method <hooverOnElementVisible()>");
+		} catch (Exception e) {
+			Log.error("Exception error in method <hooverOnElementVisible()>");
 			Log.error(e.getMessage());
-			throw new TestException("Element not found in method <hooverOnElementVisible()>");
+			throw new TestException("Exception error in method <hooverOnElementVisible()>");
 		}	
 	}
 
@@ -259,8 +280,8 @@ public class SeleniumWrappers extends BaseTest {
 	 * Wrapped method over Selenium Actions default moveToElement() method, enhanced with:</br>
 	 * 1. Logging mechanism</br>
 	 * 2. waitForElementToBePresent() method, before any action to be performed on webElement</br>
-	 * 3. returnElement() method, for using a WebElement
-	 * 4. catch NoSuchElementException</br>
+	 * 3. returnElement() method</br>
+	 * 4. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 */
@@ -270,10 +291,10 @@ public class SeleniumWrappers extends BaseTest {
 		try {
 			waitForElementToBePresent(locator);
 			hoover.moveToElement(returnElement(locator)).perform();
-		} catch (NoSuchElementException e) {
-			Log.error("Element not found in method <hooverOnElementPresent()>");
+		} catch (Exception e) {
+			Log.error("Exception error in method <hooverOnElementPresent()>");
 			Log.error(e.getMessage());
-			throw new TestException("Element not found in method <hooverOnElementPresent()>");
+			throw new TestException("Exception error in method <hooverOnElementPresent()>");
 		}	
 	}
 	
@@ -282,8 +303,8 @@ public class SeleniumWrappers extends BaseTest {
 	/**
 	 * Wrapped method over Selenium Select default selectByIndex() method, enhanced with:</br>
 	 * 1. Logging mechanism</br>
-	 * 2. returnElement() method, for using a WebElement
-	 * 3. catch NoSuchElementException</br>
+	 * 2. returnElement() method</br>
+	 * 3. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 * @param index (Integer value)
@@ -293,18 +314,18 @@ public class SeleniumWrappers extends BaseTest {
 		try {
 			Select select = new Select(returnElement(locator));
 			select.selectByIndex(index);
-		} catch (NoSuchElementException e) {
-			Log.error("Element not found in method <selectByIndex()>");
+		} catch (Exception e) {
+			Log.error("Exception error in method <selectByIndex()>");
 			Log.error(e.getMessage());
-			throw new TestException("Element not found in method <selectByIndex()>");
+			throw new TestException("Exception error in method <selectByIndex()>");
 		}
 	}
 
 	/**
 	 * Wrapped method over Selenium Select default selectByValue() method, enhanced with:</br>
 	 * 1. Logging mechanism</br>
-	 * 2. returnElement() method, for using a WebElement
-	 * 3. catch NoSuchElementException</br>
+	 * 2. returnElement() method</br>
+	 * 3. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 * @param value (String value)
@@ -314,18 +335,18 @@ public class SeleniumWrappers extends BaseTest {
 		try {
 			Select select = new Select(returnElement(locator));
 			select.selectByValue(value);
-		} catch (NoSuchElementException e) {
-			Log.error("Element not found in method <selectByValue()>");
+		} catch (Exception e) {
+			Log.error("Exception error in method <selectByValue()>");
 			Log.error(e.getMessage());
-			throw new TestException("Element not found in method <selectByValue()>");
+			throw new TestException("Exception error in method <selectByValue()>");
 		}
 	}
 	
 	/**
 	 * Wrapped method over Selenium Select default selectByVisibleText() method, enhanced with:</br>
 	 * 1. Logging mechanism</br>
-	 * 2. returnElement() method, for using a WebElement
-	 * 3. catch NoSuchElementException</br>
+	 * 2. returnElement() method</br>
+	 * 3. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 * @param text (String value)
@@ -335,18 +356,18 @@ public class SeleniumWrappers extends BaseTest {
 		try {
 			Select select = new Select(returnElement(locator));
 			select.selectByVisibleText(text);
-		} catch (NoSuchElementException e) {
-			Log.error("Element not found in method <selectByVisibleText()>");
+		} catch (Exception e) {
+			Log.error("Exception error in method <selectByVisibleText()>");
 			Log.error(e.getMessage());
-			throw new TestException("Element not found in method <selectByVisibleText()>");
+			throw new TestException("Exception error in method <selectByVisibleText()>");
 		}
 	}
 	
 	/**
 	 * Wrapped method over Selenium Select default getFirstSelectedOption() method, enhanced with:</br>
 	 * 1. Logging mechanism</br>
-	 * 2. returnElement() method, for using a WebElement
-	 * 3. catch NoSuchElementException</br>
+	 * 2. returnElement() method</br>
+	 * 3. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 * @return String (String value) --> value of the selected option
@@ -356,8 +377,8 @@ public class SeleniumWrappers extends BaseTest {
 		try {
 			Select select = new Select(returnElement(locator));
 			return select.getFirstSelectedOption().getText();
-		} catch (NoSuchElementException e) {
-			Log.error("Element not found in method <getSelectedOption()>");
+		} catch (Exception e) {
+			Log.error("Exception error in method <getSelectedOption()>");
 			Log.error(e.getMessage());
 			return null;
 		}
@@ -367,8 +388,8 @@ public class SeleniumWrappers extends BaseTest {
 	/**
 	 * Wrapped method over Selenium Actions default dragAndDrop() method, enhanced with:</br>
 	 * 1. Logging mechanism</br>
-	 * 2. returnElement() method, for using a WebElement
-	 * 3. catch NoSuchElementException</br>
+	 * 2. returnElement() method</br>
+	 * 3. catch General exception</br>
 	 * 
 	 * @param locator1 (By locator) --> element to be moved
 	 * @param locator2 (By locator) --> element on which the first element is moved over
@@ -378,18 +399,18 @@ public class SeleniumWrappers extends BaseTest {
 		try {
 			Actions action = new Actions(driver);
 			action.dragAndDrop(returnElement(locator1), returnElement(locator2)).perform();
-		} catch (NoSuchElementException e) {
-			Log.error("Element not found in method <dragAndDropElementToElement()>");			//ar trebui sa diferentiez NoSuchElementException pe element1 si element2; ma gandesc sa folosesc un if, dar nu-mi dai seama cum ar trebui sa pun conditia
+		} catch (Exception e) {
+			Log.error("Exception error in method <dragAndDropElementToElement()>");			//ar trebui sa diferentiez General Exception pe element1 si element2; ma gandesc sa folosesc un if, dar nu-mi dai seama cum ar trebui sa pun conditia
 			Log.error(e.getMessage());
-			throw new TestException("Element not found in method <dragAndDropElementToElement()>");
+			throw new TestException("Exception error in method <dragAndDropElementToElement()>");
 		}
 	}
 
 	/**
 	 * Wrapped method over Selenium Actions default dragAndDropBy() method, enhanced with:</br>
 	 * 1. Logging mechanism</br>
-	 * 2. returnElement() method, for using a WebElement
-	 * 3. catch NoSuchElementException</br>
+	 * 2. returnElement() method</br>
+	 * 3. catch General exception</br>
 	 * 
 	 * @param locator (By locator) --> element to be moved
 	 * @param x (Integer value) --> horizontal move
@@ -406,10 +427,10 @@ public class SeleniumWrappers extends BaseTest {
 			  		.release()
 			  		.perform();
 */			action.dragAndDropBy(returnElement(locator), x, y).perform();
-		} catch (NoSuchElementException e) {
-			Log.error("Element not found in method <dragAndDrop()>");
+		} catch (Exception e) {
+			Log.error("Exception error in method <dragAndDrop()>");
 			Log.error(e.getMessage());
-			throw new TestException("Element not found in method <dragAndDrop()>");
+			throw new TestException("Exception error in method <dragAndDrop()>");
 		}
 	}
 	
@@ -418,7 +439,7 @@ public class SeleniumWrappers extends BaseTest {
 	 * 1. Logging mechanism</br>
 	 * 2. click() custom method</br>
 	 * 3. driver.close() functionality</br>
-	 * 4. catch Exception</br>
+	 * 4. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 * @return String (String value of current URL)
@@ -434,7 +455,7 @@ public class SeleniumWrappers extends BaseTest {
 			driver.switchTo().window(browserTabs.get(0));
 			return currentURL;
 		} catch (Exception e) {
-			Log.error("Element not found in method <checkRedirectedUrlAndReturnToInitialPage()>");
+			Log.error("Exception error in method <checkRedirectedUrlAndReturnToInitialPage()>");
 			Log.error(e.getMessage());
 			return e.getMessage(); 
 		}

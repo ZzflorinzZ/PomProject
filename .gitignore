@@ -1,4 +1,6 @@
 .settings/
+Failure_Screenshoots/
+Logs/
 target/
 test-output/
 .classpath

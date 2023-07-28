@@ -25,16 +25,16 @@ public class Driver {
 		
 		if(browser.equalsIgnoreCase("chrome")) {	
 //    		WebDriver driver = new ChromeDriver();
-//			driver.set(new ChromeDriver(getChromeOptions()));
 //			driver.set(new ChromeDriver());
+			driver.set(new ChromeDriver(getChromeOptions()));
 			System.out.println("Chrome" + Thread.currentThread().getId());
 			
 			//setup for SeleniumGrid
-			rwd = new RemoteWebDriver(new URL("http://localhost:4444/"), getChromeOptions());
-			driver.set(rwd);
+//			rwd = new RemoteWebDriver(new URL("http://localhost:4444/"), getChromeOptions());
+//			driver.set(rwd);
 			
 			return driver.get();	
-			
+/*			
 		}else if(browser.equalsIgnoreCase("firefox")) {
 //			driver.set(new FirefoxDriver(getFirefoxOptions()));
 			System.out.println("Firefox" + Thread.currentThread().getId());
@@ -44,13 +44,14 @@ public class Driver {
 			driver.set(rwd);
 			
 			return driver.get();
+*/			
 		}else if(browser.equalsIgnoreCase("edge")) {
 //			driver.set(new EdgeDriver(getEdgeOptions()));
 			System.out.println("Edge" + Thread.currentThread().getId());
 			
 			//setup for SeleniumGrid
-			rwd = new RemoteWebDriver(new URL("http://localhost:4444/"), getEdgeOptions());
-			driver.set(rwd);
+//			rwd = new RemoteWebDriver(new URL("http://localhost:4444/"), getEdgeOptions());
+//			driver.set(rwd);
 			
 			return driver.get();
 		}
