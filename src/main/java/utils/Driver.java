@@ -18,6 +18,7 @@ public class Driver {
 	
 	//for parallel execution purpose
 	public static ThreadLocal<WebDriver> driver = new ThreadLocal<WebDriver>();
+	public static ThreadLocal<String> runningBrowser =  new ThreadLocal<String>();
 	
 	public WebDriver initBrowser(String browser) throws MalformedURLException {
 		
@@ -33,25 +34,31 @@ public class Driver {
 //			rwd = new RemoteWebDriver(new URL("http://localhost:4444/"), getChromeOptions());
 //			driver.set(rwd);
 			
+			runningBrowser.set("CHROME ID: " + String.valueOf(Thread.currentThread().getId()));
+			
 			return driver.get();	
-/*			
+			
 		}else if(browser.equalsIgnoreCase("firefox")) {
-//			driver.set(new FirefoxDriver(getFirefoxOptions()));
+			driver.set(new FirefoxDriver(getFirefoxOptions()));
 			System.out.println("Firefox" + Thread.currentThread().getId());
 			
 			//setup for SeleniumGrid
-			rwd = new RemoteWebDriver(new URL("http://localhost:4444/"), getFirefoxOptions());
-			driver.set(rwd);
+//			rwd = new RemoteWebDriver(new URL("http://localhost:4444/"), getFirefoxOptions());
+//			driver.set(rwd);
+			
+			runningBrowser.set("FIREFOX ID: " + String.valueOf(Thread.currentThread().getId()));
 			
 			return driver.get();
-*/			
+			
 		}else if(browser.equalsIgnoreCase("edge")) {
-//			driver.set(new EdgeDriver(getEdgeOptions()));
+			driver.set(new EdgeDriver(getEdgeOptions()));
 			System.out.println("Edge" + Thread.currentThread().getId());
 			
 			//setup for SeleniumGrid
 //			rwd = new RemoteWebDriver(new URL("http://localhost:4444/"), getEdgeOptions());
 //			driver.set(rwd);
+			
+			runningBrowser.set("EDGE ID: " + String.valueOf(Thread.currentThread().getId()));
 			
 			return driver.get();
 		}
@@ -60,8 +67,8 @@ public class Driver {
 	
 	public ChromeOptions getChromeOptions() {
 		ChromeOptions options = new ChromeOptions();
-	//	options.addArguments("--headless");
-	//	options.addArguments("--window-size=1580, 1280");
+//		options.addArguments("--headless");
+//		options.addArguments("--window-size=1580, 1280");
 		return options; 
 	}
 	
@@ -69,7 +76,7 @@ public class Driver {
 		File pathToBinary = new File("D:\\Utile\\Mozilla Firefox\\firefox.exe");
 		FirefoxBinary fbinary = new FirefoxBinary(pathToBinary);
 //		FirefoxBinary fbinary = new FirefoxBinary();
-		fbinary.addCommandLineOptions("--headless");
+//		fbinary.addCommandLineOptions("--headless");
 		FirefoxOptions foptions = new FirefoxOptions();
 		foptions.setBinary(fbinary);
 		return foptions;

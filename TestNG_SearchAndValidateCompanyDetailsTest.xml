@@ -1,13 +1,17 @@
-<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" > 
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="Suite1" verbose="1">
-		
-	  <parameter name = "url" value = "https://moony.ro/"/>
-	  
-  <test name="Chrome"   >
-	  <parameter name = "browser" value = "chrome"/>
-    <classes>
-      <class name="tests.SearchAndValidateCompanyDetailsTest"/>
-   </classes>
- </test>
- 
+
+	<parameter name="url" value="https://moony.ro/" />
+
+	<listeners>
+		<listener class-name="utils.TestNgListeners" />
+	</listeners>
+
+	<test name="Chrome">
+		<parameter name="browser" value="chrome" />
+		<classes>
+			<class name="tests.SearchAndValidateCompanyDetailsTest" />
+		</classes>
+	</test>
+
 </suite>

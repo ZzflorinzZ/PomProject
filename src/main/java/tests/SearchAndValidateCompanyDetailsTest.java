@@ -17,8 +17,8 @@ public class SearchAndValidateCompanyDetailsTest extends BaseTest {
 		app.click(app.menu.companies);
 		app.sendKeys(app.companies.searchField, "Coin");
 		app.click(app.companies.searchButton);
-		app.click(app.companies.coinTracker);			//pica din cand in cand cu  <<Exception error in method <click()>> / <<ERROR utils.Log - stale element reference: stale element not found>>, 
-	}													//nu il prinde in metoda returnElement, ci intra pe General Exception din click()
+		app.click(app.companies.coinTracker);
+	}													
 
 	@Test(priority = 2, dependsOnMethods = "searchCompany")
 	public void validateRedirectButtons() {
@@ -38,7 +38,7 @@ public class SearchAndValidateCompanyDetailsTest extends BaseTest {
 		System.out.println(app.genericCompany.b2bSaas);
 		System.out.println(app.genericCompany.initInformation().size());
 		
-		assertEquals(app.genericCompany.initInformation().get(app.genericCompany.categories), app.genericCompany.b2bSaas);		// pica asserturile; 		
+		assertEquals(app.genericCompany.initInformation().get(app.genericCompany.categories), app.genericCompany.b2bSaas);		
 		assertEquals(app.genericCompany.initInformation().get(app.genericCompany.categories2), app.genericCompany.webDevelopment);
 		assertEquals(app.genericCompany.initInformation().get(app.genericCompany.companySize), app.genericCompany.sizeNumber);
 		assertEquals(app.genericCompany.initInformation().get(app.genericCompany.foundedIn), app.genericCompany.foundationYear);
