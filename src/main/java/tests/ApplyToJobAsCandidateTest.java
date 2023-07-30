@@ -1,5 +1,9 @@
 package tests;
 
+import static org.testng.Assert.assertTrue;
+
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.NoAlertPresentException;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -30,5 +34,8 @@ public class ApplyToJobAsCandidateTest extends BaseTest{
 		app.checkElementIsDisplayed(app.genericJob.applyPopup);
 		app.click(app.genericJob.callIcon);
 		
+		assertTrue(app.jsAlertGetText().contains("Pick an app"));	//ERROR utils.Log - org.openqa.selenium.NoAlertPresentException: no such alert
+		app.jsAlertDismiss();	
 	}
+
 }
