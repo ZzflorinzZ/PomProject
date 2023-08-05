@@ -32,19 +32,14 @@ public class SeleniumWrappers extends BaseTest {
 	//============================================	
 	/**
 	 * Wrapped method over Selenium default Alert accept() method, enhanced with:</br>
-	 * 1. catch NoAlertPresentException</br>
-	 * 2. catch General exception</br>
+	 * 1. catch General exception</br>
 	 */
 	public void jsAlertAccept() {
 		Log.info(runningBrowser.get() + " Called method <jsAlertAccept()>");
 		try {
 			driver.switchTo().alert().accept();
-		}catch(NoAlertPresentException e) {
-			Log.error(runningBrowser.get() + " Catch NoAlertPresentException in method <jsAlertAccept()>");
-			Log.error(runningBrowser.get() + " " + e.getMessage());
-			throw new TestException(runningBrowser.get() + " NoAlertPresentException in method <jsAlertAccept()>");
-		}catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <jsAlertAccept()>");
+		} catch (Exception e) {
+			Log.error(runningBrowser.get() + " Caught Exception error in method <jsAlertAccept()>");
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <jsAlertAccept()>");
 		}
@@ -53,19 +48,14 @@ public class SeleniumWrappers extends BaseTest {
 	//============================================	
 	/**
 	 * Wrapped method over Selenium default Alert dismiss() method, enhanced with:</br>
-	 * 1. catch NoAlertPresentException</br>
-	 * 2. catch General exception</br>
+	 * 1. catch General exception</br>
 	 */
 	public void jsAlertDismiss() {
 		Log.info(runningBrowser.get() + " Called method <jsAlertDismiss()>");
 		try {
 			driver.switchTo().alert().dismiss();
-		}catch(NoAlertPresentException e) {
-			Log.error(runningBrowser.get() + " Catch NoAlertPresentException in method <jsAlertDismiss()>");
-			Log.error(runningBrowser.get() + " " + e.getMessage());
-			throw new TestException(runningBrowser.get() + " NoAlertPresentException in method <jsAlertDismiss()>");
-		}catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <jsAlertDismiss()>");
+		} catch (Exception e) {
+			Log.error(runningBrowser.get() + " Caught Exception error in method <jsAlertDismiss()>");
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <jsAlertDismiss()>");
 		}
@@ -74,8 +64,9 @@ public class SeleniumWrappers extends BaseTest {
 	//============================================	
 	/**
 	 * Wrapped method over Selenium default Alert getText() method, enhanced with:</br>
-	 * 1. catch NoAlertPresentException</br>
-	 * 2. catch General exception</br>
+	 * 1. catch General exception</br>
+	 * 
+	 * @return text of jsAlert 	(String value)
 	 */
 	public String jsAlertGetText() {
 		Log.info(runningBrowser.get() + " Called method <jsAlertGetText()>");
@@ -85,12 +76,8 @@ public class SeleniumWrappers extends BaseTest {
 			}else {
 				return driver.switchTo().alert().getText();
 			}
-		}catch(NoAlertPresentException e) {
-			Log.error(runningBrowser.get() + " Catch NoAlertPresentException in method <jsAlertGetText()>");
-			Log.error(runningBrowser.get() + " " + e.getMessage());
-			return e.getMessage(); 
-		}catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <jsAlertGetText()>");
+		} catch (Exception e) {
+			Log.error(runningBrowser.get() + " Caught Exception error in method <jsAlertGetText()>");
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			return e.getMessage(); 
 		}
@@ -99,19 +86,16 @@ public class SeleniumWrappers extends BaseTest {
 	//============================================	
 	/**
 	 * Wrapped method over Selenium default Alert sendKeys() method, enhanced with:</br>
-	 * 1. catch NoAlertPresentException</br>
-	 * 2. catch General exception</br>
+	 * 1. catch General exception</br>
+	 * 
+	 * @param textToSend 	(String value)
 	 */
 	public void jsAlertSendKeys(String textToSend) {
 		Log.info(runningBrowser.get() + " Called method <jsAlertSendKeys()>");
 		try {
 			driver.switchTo().alert().sendKeys(textToSend);
-		}catch(NoAlertPresentException e) {
-			Log.error(runningBrowser.get() + " Catch NoAlertPresentException in method <jsAlertSendKeys()>");
-			Log.error(runningBrowser.get() + " " + e.getMessage());
-			throw new TestException(runningBrowser.get() + " NoAlertPresentException in method <jsAlertSendKeys()>");
-		}catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <jsAlertSendKeys()>");
+		} catch (Exception e) {
+			Log.error(runningBrowser.get() + " Caught Exception error in method <jsAlertSendKeys()>");
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <jsAlertSendKeys()>");
 		}
@@ -125,8 +109,8 @@ public class SeleniumWrappers extends BaseTest {
 	 * 1. Logging mechanism</br>
 	 * 2. catch NoSuchElementException</br>
 	 * 3. catch StaleElementReferenceException</br>
-	 * 4. waitForElementToBePresent() method</br>
-	 * 5. Retry mechanism</br>
+	 * 4. Retry mechanism</br>
+	 * 5. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 * @return WebElement
@@ -136,13 +120,17 @@ public class SeleniumWrappers extends BaseTest {
 		try {
 			return driver.findElement(locator);
 		} catch (NoSuchElementException e) {
-			Log.error(runningBrowser.get() + " Element not found in method <returnElement()>");
+			Log.error(runningBrowser.get() + " Caught NoSuchElementException in method <returnElement()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			return null;
 		} catch (StaleElementReferenceException e) {
-			Log.error(runningBrowser.get() + " Catch StaleElementReferenceException in method <returnElement()> on: " + locator.toString());
+			Log.error(runningBrowser.get() + " Caught StaleElementReferenceException in method <returnElement()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			return driver.findElement(locator);
+		}catch (Exception e) {
+			Log.error(runningBrowser.get() + " Caught Exception error in method <returnElement()> on: " + locator.toString());
+			Log.error(runningBrowser.get() + " " + e.getMessage());
+			throw new TestException(runningBrowser.get() + " Exception error in method <returnElement()>");
 		}
 	}
 
@@ -165,11 +153,11 @@ public class SeleniumWrappers extends BaseTest {
 			waitForElementToBeClickable(locator);
 			returnElement(locator).click();
 		} catch (StaleElementReferenceException e) {
-			Log.warn(runningBrowser.get() + " Catch StaleElementReferenceException in method <click()> on: " + locator.toString());
+			Log.warn(runningBrowser.get() + " Caught StaleElementReferenceException in method <click()> on: " + locator.toString());
 			Log.warn(runningBrowser.get() + " " + e.getMessage());
 			returnElement(locator).click();
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <click()>");
+			Log.error(runningBrowser.get() + " Caught Exception error in method <click()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <click()>");
 		}
@@ -191,11 +179,11 @@ public class SeleniumWrappers extends BaseTest {
 			waitForElementToBePresent(locator);
 			returnElement(locator).click();
 		} catch (StaleElementReferenceException e) {
-			Log.warn(runningBrowser.get() + " Catch StaleElementReferenceException in method <clickOnElementPresent()> on: " + locator.toString());
+			Log.warn(runningBrowser.get() + " Caught StaleElementReferenceException in method <clickOnElementPresent()> on: " + locator.toString());
 			Log.warn(runningBrowser.get() + " " + e.getMessage());
 			returnElement(locator).click();
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <clickOnElementPresent()>");
+			Log.error(runningBrowser.get() + " Caught Exception error in method <clickOnElementPresent()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <clickOnElementPresent()>");
 		}
@@ -218,12 +206,12 @@ public class SeleniumWrappers extends BaseTest {
 			Actions action = new Actions(driver);
 			action.doubleClick(returnElement(locator)).perform();
 		} catch (StaleElementReferenceException e) {
-			Log.warn(runningBrowser.get() + " Catch StaleElementReferenceException in method <doubleClick()> on: " + locator.toString());
+			Log.warn(runningBrowser.get() + " Caught StaleElementReferenceException in method <doubleClick()> on: " + locator.toString());
 			Log.warn(runningBrowser.get() + " " + e.getMessage());
 			Actions action = new Actions(driver);
 			action.doubleClick(returnElement(locator)).perform();
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <doubleClick()>");
+			Log.error(runningBrowser.get() + " Caught Exception error in method <doubleClick()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <doubleClick()>");
 		}
@@ -237,6 +225,7 @@ public class SeleniumWrappers extends BaseTest {
 	 * 1. Logging mechanism</br>
 	 * 2. Explicit wait</br>
 	 * 3. catch NoSuchElementException</br>
+	 * 4. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 */
@@ -246,9 +235,13 @@ public class SeleniumWrappers extends BaseTest {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(returnElement(locator)));
 		} catch (NoSuchElementException e) {
-			Log.error(runningBrowser.get() + " Element not found in method <waitForElementToBeClickable()>");
+			Log.error(runningBrowser.get() + " Caught NoSuchElementException in method <waitForElementToBeClickable()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Element not found in method <waitForElementToBeClickable()>");
+		} catch (Exception e) {
+			Log.error(runningBrowser.get() + " Caught Exception error in method <waitForElementToBeClickable()> on: " + locator.toString());
+			Log.error(runningBrowser.get() + " " + e.getMessage());
+			throw new TestException(runningBrowser.get() + " Exception error in method <waitForElementToBeClickable()>");
 		}
 	}
 
@@ -258,6 +251,7 @@ public class SeleniumWrappers extends BaseTest {
 	 * 1. Logging mechanism</br>
 	 * 2. Explicit wait</br>
 	 * 3. catch NoSuchElementException</br>
+	 * 4. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 */
@@ -267,9 +261,13 @@ public class SeleniumWrappers extends BaseTest {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.visibilityOf(returnElement(locator)));
 		} catch (NoSuchElementException e) {
-			Log.error(runningBrowser.get() + " Element not found in method <waitForElementToBeVisible()>");
+			Log.error(runningBrowser.get() + " Caught NoSuchElementException in method <waitForElementToBeVisible()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Element not found in method <waitForElementToBeVisible()>");
+		} catch (Exception e) {
+			Log.error(runningBrowser.get() + " Caught Exception error in method <waitForElementToBeVisible()> on: " + locator.toString());
+			Log.error(runningBrowser.get() + " " + e.getMessage());
+			throw new TestException(runningBrowser.get() + " Exception error in method <waitForElementToBeVisible()>");
 		}
 	}
 
@@ -279,6 +277,7 @@ public class SeleniumWrappers extends BaseTest {
 	 * 1. Logging mechanism</br>
 	 * 2. Explicit wait</br>
 	 * 3. catch NoSuchElementException</br>
+	 * 4. catch General exception</br>
 	 * 
 	 * @param locator (By locator)
 	 */
@@ -288,9 +287,13 @@ public class SeleniumWrappers extends BaseTest {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.presenceOfElementLocated(locator));
 		} catch (NoSuchElementException e) {
-			Log.error(runningBrowser.get() + " Element not found in method <waitForElementToBePresent()>");
+			Log.error(runningBrowser.get() + " Caught NoSuchElementException in method <waitForElementToBePresent()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Element not found in method <waitForElementToBePresent()>");
+		} catch (Exception e) {
+			Log.error(runningBrowser.get() + " Caught Exception error in method <waitForElementToBePresent()> on: " + locator.toString());
+			Log.error(runningBrowser.get() + " " + e.getMessage());
+			throw new TestException(runningBrowser.get() + " Exception error in method <waitForElementToBePresent()>");
 		}
 	}
 
@@ -300,6 +303,7 @@ public class SeleniumWrappers extends BaseTest {
 	 * 1. Logging mechanism</br>
 	 * 2. Explicit wait</br>
 	 * 3. catch NoSuchElementException</br>
+	 * 4. catch General exception</br>
 	 * 
 	 * @param locator         (By locator)
 	 * @param textToBePresent (String value)
@@ -310,9 +314,13 @@ public class SeleniumWrappers extends BaseTest {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.textToBePresentInElementLocated(locator, textToBePresent));
 		} catch (NoSuchElementException e) {
-			Log.error(runningBrowser.get() + " Element not found in method <waitForTextToBePresentInElement()>");
+			Log.error(runningBrowser.get() + " Caught NoSuchElementException in method <waitForTextToBePresentInElement()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Element not found in method <waitForTextToBePresentInElement()>");
+		} catch (Exception e) {
+			Log.error(runningBrowser.get() + " Caught Exception error in method <waitForTextToBePresentInElement()> on: " + locator.toString());
+			Log.error(runningBrowser.get() + " " + e.getMessage());
+			throw new TestException(runningBrowser.get() + " Exception error in method <waitForTextToBePresentInElement()>");
 		}
 	}
 
@@ -337,7 +345,7 @@ public class SeleniumWrappers extends BaseTest {
 			returnElement(locator).clear();
 			returnElement(locator).sendKeys(textToSend);
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <sendKeys()>");
+			Log.error(runningBrowser.get() + " Caught Exception error in method <sendKeys()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <sendKeys()>");
 		}
@@ -361,7 +369,7 @@ public class SeleniumWrappers extends BaseTest {
 			returnElement(locator).isDisplayed();
 			return true;
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <checkElementIsDisplayed()>");
+			Log.error(runningBrowser.get() + " Caught Exception error in method <checkElementIsDisplayed()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			return false;
 		}
@@ -386,7 +394,7 @@ public class SeleniumWrappers extends BaseTest {
 			waitForElementToBeVisible(locator);
 			hoover.moveToElement(returnElement(locator)).perform();
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <hooverOnElementVisible()>");
+			Log.error(runningBrowser.get() + " Caught Exception error in method <hooverOnElementVisible()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <hooverOnElementVisible()>");
 		}
@@ -409,7 +417,7 @@ public class SeleniumWrappers extends BaseTest {
 			waitForElementToBePresent(locator);
 			hoover.moveToElement(returnElement(locator)).perform();
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <hooverOnElementPresent()>");
+			Log.error(runningBrowser.get() + " Caught Exception error in method <hooverOnElementPresent()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <hooverOnElementPresent()>");
 		}
@@ -433,7 +441,7 @@ public class SeleniumWrappers extends BaseTest {
 			Select select = new Select(returnElement(locator));
 			select.selectByIndex(index);
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <selectByIndex()>");
+			Log.error(runningBrowser.get() + " Caught Exception error in method <selectByIndex()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <selectByIndex()>");
 		}
@@ -455,7 +463,7 @@ public class SeleniumWrappers extends BaseTest {
 			Select select = new Select(returnElement(locator));
 			select.selectByValue(value);
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <selectByValue()>");
+			Log.error(runningBrowser.get() + " Caught Exception error in method <selectByValue()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <selectByValue()>");
 		}
@@ -477,7 +485,7 @@ public class SeleniumWrappers extends BaseTest {
 			Select select = new Select(returnElement(locator));
 			select.selectByVisibleText(text);
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <selectByVisibleText()>");
+			Log.error(runningBrowser.get() + " Caught Exception error in method <selectByVisibleText()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <selectByVisibleText()>");
 		}
@@ -499,7 +507,7 @@ public class SeleniumWrappers extends BaseTest {
 			Select select = new Select(returnElement(locator));
 			return select.getFirstSelectedOption().getText();
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <getSelectedOption()>");
+			Log.error(runningBrowser.get() + " Caught Exception error in method <getSelectedOption()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			return null;
 		}
@@ -523,7 +531,7 @@ public class SeleniumWrappers extends BaseTest {
 			Actions action = new Actions(driver);
 			action.dragAndDrop(returnElement(locator1), returnElement(locator2)).perform();
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <dragAndDropElementToElement()>"); // ar trebui sa diferentiez General Exception pe element1 si element2? ma gandesc sa folosesc un if, dar nu-mi dau seama cum ar trebui sa pun conditia
+			Log.error(runningBrowser.get() + " Caught Exception error in method <dragAndDropElementToElement()>"); 
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <dragAndDropElementToElement()>");
 		}
@@ -552,7 +560,7 @@ public class SeleniumWrappers extends BaseTest {
 					.perform();
 */			action.dragAndDropBy(returnElement(locator), x, y).perform();
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <dragAndDrop()>");
+			Log.error(runningBrowser.get() + " Caught Exception error in method <dragAndDrop()> on: " + locator.toString());
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			throw new TestException(runningBrowser.get() + " Exception error in method <dragAndDrop()>");
 		}
@@ -582,7 +590,7 @@ public class SeleniumWrappers extends BaseTest {
 			driver.switchTo().window(browserTabs.get(0));
 			return currentURL;
 		} catch (Exception e) {
-			Log.error(runningBrowser.get() + " Exception error in method <checkRedirectedUrlAndReturnToInitialPage()>");
+			Log.error(runningBrowser.get() + " Caught Exception error in method <checkRedirectedUrlAndReturnToInitialPage()>");
 			Log.error(runningBrowser.get() + " " + e.getMessage());
 			return e.getMessage();
 		}

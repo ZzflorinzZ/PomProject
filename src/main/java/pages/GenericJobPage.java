@@ -16,4 +16,6 @@ public class GenericJobPage extends SeleniumWrappers{
 	public By companySection = By.cssSelector("div[class^='jobs-company-sidebar']");
 	public By applyPopup = By.cssSelector("div[class='apply-popup']");
 	public By callIcon = By.cssSelector("i[class='fal fa-phone-alt']");
+	
+	public By closeButton = By.xpath("(//a[@class='btn-close'])[2]");
 }
